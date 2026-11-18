@@ -1,0 +1,6 @@
+{
+  "name": "Setting",
+  "description": "Social networking app with real-time feeds, friends, private messaging, notifications, search, and role-based admin controls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,339 @@
+{
+  "entities": {
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Authorized Ninja Social administrator role record.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["OWNER", "MODERATOR"] },
+        "grantedBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()" }
+      },
+      "required": ["userId", "email", "role", "grantedBy", "createdAt"]
+    },
+    "AppConfig": {
+      "title": "AppConfig",
+      "description": "Global platform controls managed by the Ninja Social administrator.",
+      "type": "object",
+      "properties": {
+        "registrationEnabled": { "type": "boolean" },
+        "maintenanceMode": { "type": "boolean" },
+        "maintenanceMessage": { "type": "string" },
+        "communityGuidelines": { "type": "string" },
+        "latestAnnouncement": { "type": "string" },
+        "updatedBy": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["registrationEnabled", "maintenanceMode", "maintenanceMessage", "communityGuidelines", "latestAnnouncement", "updatedBy", "updatedAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public social profile for a Ninja Social member (no PII).",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "displayName": { "type": "string" },
+        "bio": { "type": "string" },
+        "avatarData": { "type": "string" },
+        "coverData": { "type": "string" },
+        "accountStatus": { "type": "string", "enum": ["ACTIVE", "SUSPENDED", "BANNED"] },
+        "presenceStatus": { "type": "string", "enum": ["ONLINE", "OFFLINE"] },
+        "allowMessagesFrom": { "type": "string", "enum": ["FRIENDS_ONLY", "EVERYONE"] },
+        "showFriendsList": { "type": "boolean" },
+        "friendIds": { "type": "array" },
+        "friendsCount": { "type": "integer" },
+        "postsCount": { "type": "integer" },
+        "lastSeenAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "username", "displayName", "bio", "avatarData", "coverData",
+        "accountStatus", "presenceStatus", "allowMessagesFrom", "showFriendsList",
+        "friendIds", "friendsCount", "postsCount", "lastSeenAt", "createdAt", "updatedAt"
+      ]
+    },
+    "PrivateUserInfo": {
+      "title": "PrivateUserInfo",
+      "description": "Private PII, block list, saved posts, and notification preferences.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "blockedUserIds": { "type": "array" },
+        "savedPostIds": { "type": "array" },
+        "pushNotificationsEnabled": { "type": "boolean" },
+        "showOnlineStatus": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "userId", "email", "blockedUserIds", "savedPostIds",
+        "pushNotificationsEnabled", "showOnlineStatus", "createdAt", "updatedAt"
+      ]
+    },
+    "UsernameClaim": {
+      "title": "UsernameClaim",
+      "description": "Unique lowercase username reservation index.",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["username", "userId", "createdAt"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "Social feed post with text caption, up to 4 compressed photos, or share attribution.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorUsername": { "type": "string" },
+        "authorAvatarData": { "type": "string" },
+        "caption": { "type": "string" },
+        "photoDataList": { "type": "array" },
+        "visibility": { "type": "string", "enum": ["PUBLIC", "FRIENDS"] },
+        "sharedFromPostId": { "type": "string" },
+        "sharedFromAuthorName": { "type": "string" },
+        "likesCount": { "type": "integer" },
+        "commentsCount": { "type": "integer" },
+        "sharesCount": { "type": "integer" },
+        "moderationStatus": { "type": "string", "enum": ["ACTIVE", "REMOVED"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "authorId", "authorName", "authorUsername", "authorAvatarData", "caption",
+        "photoDataList", "visibility", "sharedFromPostId", "sharedFromAuthorName",
+        "likesCount", "commentsCount", "sharesCount", "moderationStatus", "createdAt", "updatedAt"
+      ]
+    },
+    "PostLike": {
+      "title": "PostLike",
+      "description": "Per-user like record under a post.",
+      "type": "object",
+      "properties": {
+        "postId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["postId", "userId", "userName", "createdAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "Comment or threaded reply under a post.",
+      "type": "object",
+      "properties": {
+        "postId": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorAvatarData": { "type": "string" },
+        "text": { "type": "string" },
+        "parentCommentId": { "type": "string" },
+        "replyToAuthorName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "postId", "authorId", "authorName", "authorAvatarData", "text",
+        "parentCommentId", "replyToAuthorName", "createdAt", "updatedAt"
+      ]
+    },
+    "Friendship": {
+      "title": "Friendship",
+      "description": "Friend request or accepted friendship between two users.",
+      "type": "object",
+      "properties": {
+        "participantIds": { "type": "array" },
+        "requesterId": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "requesterName": { "type": "string" },
+        "requesterUsername": { "type": "string" },
+        "requesterAvatarData": { "type": "string" },
+        "receiverName": { "type": "string" },
+        "receiverUsername": { "type": "string" },
+        "receiverAvatarData": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "ACCEPTED"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "participantIds", "requesterId", "receiverId",
+        "requesterName", "requesterUsername", "requesterAvatarData",
+        "receiverName", "receiverUsername", "receiverAvatarData",
+        "status", "createdAt", "updatedAt"
+      ]
+    },
+    "Conversation": {
+      "title": "Conversation",
+      "description": "Private 1:1 messaging thread between two users.",
+      "type": "object",
+      "properties": {
+        "participantIds": { "type": "array" },
+        "user1Id": { "type": "string" },
+        "user1Name": { "type": "string" },
+        "user1AvatarData": { "type": "string" },
+        "user1Typing": { "type": "boolean" },
+        "user2Id": { "type": "string" },
+        "user2Name": { "type": "string" },
+        "user2AvatarData": { "type": "string" },
+        "user2Typing": { "type": "boolean" },
+        "lastMessageText": { "type": "string" },
+        "lastMessageSenderId": { "type": "string" },
+        "lastMessageAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "participantIds", "user1Id", "user1Name", "user1AvatarData", "user1Typing",
+        "user2Id", "user2Name", "user2AvatarData", "user2Typing",
+        "lastMessageText", "lastMessageSenderId", "lastMessageAt", "createdAt", "updatedAt"
+      ]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Private chat message with text, compressed photo, delivery, and seen states.",
+      "type": "object",
+      "properties": {
+        "conversationId": { "type": "string" },
+        "participantIds": { "type": "array" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "text": { "type": "string" },
+        "photoData": { "type": "string" },
+        "deliveredTo": { "type": "array" },
+        "seenBy": { "type": "array" },
+        "deletedBySender": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "conversationId", "participantIds", "senderId", "senderName", "text",
+        "photoData", "deliveredTo", "seenBy", "deletedBySender", "createdAt", "updatedAt"
+      ]
+    },
+    "AppNotification": {
+      "title": "AppNotification",
+      "description": "User-scoped real-time social alert.",
+      "type": "object",
+      "properties": {
+        "recipientId": { "type": "string" },
+        "actorId": { "type": "string" },
+        "actorName": { "type": "string" },
+        "actorAvatarData": { "type": "string" },
+        "type": { "type": "string", "enum": ["FRIEND_REQUEST", "FRIEND_ACCEPTED", "POST_LIKE", "POST_COMMENT", "POST_REPLY", "NEW_MESSAGE", "ANNOUNCEMENT"] },
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "targetId": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "recipientId", "actorId", "actorName", "actorAvatarData",
+        "type", "title", "body", "targetId", "read", "createdAt"
+      ]
+    },
+    "ModerationReport": {
+      "title": "ModerationReport",
+      "description": "User-submitted report for a post, user, or message excerpt.",
+      "type": "object",
+      "properties": {
+        "reporterId": { "type": "string" },
+        "reporterName": { "type": "string" },
+        "targetType": { "type": "string", "enum": ["USER", "POST", "MESSAGE"] },
+        "targetId": { "type": "string" },
+        "targetAuthorId": { "type": "string" },
+        "targetPreview": { "type": "string" },
+        "reason": { "type": "string" },
+        "status": { "type": "string", "enum": ["OPEN", "RESOLVED", "DISMISSED"] },
+        "resolutionNote": { "type": "string" },
+        "reviewedBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "reporterId", "reporterName", "targetType", "targetId", "targetAuthorId",
+        "targetPreview", "reason", "status", "resolutionNote", "reviewedBy", "createdAt", "updatedAt"
+      ]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Platform announcement authored by an authorized Ninja Social administrator.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "priority": { "type": "string", "enum": ["INFO", "IMPORTANT", "MAINTENANCE"] },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["authorId", "title", "message", "priority", "active", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{userId}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Trusted administrator and moderator role assignments."
+    },
+    "/app_config/{configId}": {
+      "schema": { "$ref": "#/entities/AppConfig" },
+      "description": "Global platform configuration (registration toggle, maintenance mode, community guidelines)."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Public social profiles for Ninja Social users."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/PrivateUserInfo" },
+      "description": "Isolated private PII and user preferences."
+    },
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/AppNotification" },
+      "description": "User-scoped notifications."
+    },
+    "/usernames/{username}": {
+      "schema": { "$ref": "#/entities/UsernameClaim" },
+      "description": "Unique lowercase username claims."
+    },
+    "/posts/{postId}": {
+      "schema": { "$ref": "#/entities/Post" },
+      "description": "Social feed posts."
+    },
+    "/posts/{postId}/likes/{likerId}": {
+      "schema": { "$ref": "#/entities/PostLike" },
+      "description": "Post likes indexed by liker UID."
+    },
+    "/posts/{postId}/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/Comment" },
+      "description": "Post comments and threaded replies."
+    },
+    "/friendships/{friendshipId}": {
+      "schema": { "$ref": "#/entities/Friendship" },
+      "description": "Friend requests and accepted friendships."
+    },
+    "/conversations/{conversationId}": {
+      "schema": { "$ref": "#/entities/Conversation" },
+      "description": "Private 1:1 conversations."
+    },
+    "/conversations/{conversationId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "Private chat messages inside a conversation."
+    },
+    "/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/ModerationReport" },
+      "description": "Moderation reports for posts, users, and message excerpts."
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Official Ninja Social admin announcements."
+    }
+  }
+}
